@@ -1,0 +1,29 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Compile",
+            "type": "shell",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "command": "g++",
+            "args": [
+                "-g",
+                "${fileDirname}\\*.cpp",
+                "-IC:\\Development_Tools\\SFML-2.5.1\\include",
+                "-IC:\\Development_Tools\\TGUI-0.8\\include",
+                "-LC:\\Development_Tools\\SFML-2.5.1\\lib",
+                "-LC:\\Development_Tools\\TGUI-0.8\\lib",
+                "-lsfml-graphics",
+                "-lsfml-window",
+                "-lsfml-system",
+                "-lsfml-network",
+                "-ltgui"
+            ]
+        }
+    ]
+}
