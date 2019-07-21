@@ -2,6 +2,7 @@
 #include <math.h>
 #include <iostream>
 #include <limits>
+#include <list>
 using namespace std;
 #define PI 3.1415926
 
@@ -86,8 +87,87 @@ void Game::HandleMovements()
 
     if (m_window.Active() && sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
     {
+        int initial;
         CreateMatrix();
         sf::sleep(delaytime);
+        cout << "Enter initial node : ";
+        cin >> initial;
+        Dijkstra(Matrix, initial);
+    }
+}
+
+void Game::Dijkstra(double M[10][10], int initial)
+{
+    list<int> available;
+    for (int i = 0; i < total_nodes; i++)
+    {
+        if (i == initial)
+        {
+            p[i].fixed = true;
+        }
+        else
+        {
+            available.push_back(i);
+            p[i].fixed = false;
+        }
+        p[i].weight = M[initial][i];
+        p[i].nodepath.push_back(initial);
+    }
+
+    int u = rand()%total_nodes;
+    while (u == initial)
+    {
+        u = rand()%total_nodes;
+    }
+
+    for (int i = 0; i < total_nodes; i++)
+    {
+        //Select node
+        for (int j = 0; j < total_nodes; j++)
+        {
+            if (j != initial && p[j].fixed == false)
+            {
+                if (M[initial][j] < M[initial][u])
+                {
+                    u = j;
+                }
+            }
+        }
+        cout << u << " is selected. " << endl;
+        p[u].nodepath.push_back(u);
+        p[u].fixed = true;
+        p[u].weight = M[initial][u];
+
+        //Modify other nodes
+        for (int j = 0; j < total_nodes; j++)
+        {
+            if (j != initial && p[j].fixed == false)
+            {
+                if (M[initial][j] > M[initial][u] + M[u][j])
+                {
+                    M[initial][j] = M[initial][u] + M[u][j];
+                    p[j].nodepath = p[u].nodepath;
+                }
+            }
+        }
+
+        //Change u to anything but initial and previous u
+        available.remove(u);
+        if (available.empty()) { break; }
+        else { u = available.front(); }
+    }
+
+    for (int i = 0; i <total_nodes; i++)
+    {
+        char c;
+        cout << "Initial Node: " << initial << "\t Final Node: " << i << " \tWeight: " << p[i].weight << "\tPath: ";
+        while (!p[i].nodepath.empty())
+        {
+            c = p[i].nodepath.front() + 65;
+            cout << c << "  ";
+            p[i].nodepath.pop_front();
+        }
+        cout << endl;
     }
 }
 

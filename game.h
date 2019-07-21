@@ -6,9 +6,16 @@
 
 class Game
 {
-  public:
+public:
 	Game();
 	~Game();
+
+	struct Path
+	{
+		std::list<int> nodepath;
+		int weight;
+		bool fixed;
+	};
 
 	void HandleMovements();
 	void Update();
@@ -19,16 +26,18 @@ class Game
 
 	Window *GetWindow();
 
-  private:
+private:
 	Window m_window;
 
 	int total_nodes;
 	Node nodes[10];
 	Edge edges[10];
 	int total_edges;
-	
+
+	Path p[10];
+
 	sf::Vector2f prev_position;
-	std::list <Node> selected_nodes;
+	std::list<Node> selected_nodes;
 
 	double Matrix[10][10];
 	sf::Time delaytime;
