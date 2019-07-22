@@ -41,4 +41,7 @@ private:
 
 	double Matrix[10][10];
 	sf::Time delaytime;
+	sf::Clock clock;
+
+	float dist(sf::Vector2f, sf::Vector2f);
 };
