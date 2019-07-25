@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/Network.hpp>
+#include <iostream>
 
 class Edge
 {
@@ -11,6 +12,7 @@ class Edge
 
     sf::Vector2f getPosition();
 
+    void updateWeight(std::string);
     void Render(sf::RenderWindow& l_window);
     int nodeA, nodeB;
     int weight;

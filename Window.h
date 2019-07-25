@@ -1,6 +1,7 @@
 #include <string>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
+#include <TGUI/TGUI.hpp>
 
 class Window
 {
@@ -12,7 +13,7 @@ class Window
 	void BeginDraw();
 	void EndDraw();
 
-	void Update();
+	void Update(tgui::Gui&);
 	bool Active();
 
 	bool IsDone();

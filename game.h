@@ -3,6 +3,7 @@
 #include "edge.h"
 #include <SFML/Network.hpp>
 #include <list>
+#include <TGUI/TGUI.hpp>
 
 class Game
 {
@@ -17,6 +18,8 @@ public:
 		bool fixed;
 	};
 
+	void changeActivity(std::string);
+
 	void HandleMovements();
 	void Update();
 	void Render();
@@ -30,8 +33,8 @@ private:
 	Window m_window;
 
 	int total_nodes;
-	Node nodes[10];
-	Edge edges[10];
+	Node nodes[20];
+	Edge edges[30];
 	int total_edges;
 
 	Path p[10];
@@ -41,7 +44,16 @@ private:
 
 	double Matrix[10][10];
 	sf::Time delaytime;
-	sf::Clock clock;
+	sf::Clock mouseclock;
+	sf::Clock keyclock;
 
 	float dist(sf::Vector2f, sf::Vector2f);
+
+	tgui::Gui gui;
+	tgui::Theme theme;
+	tgui::EditBox::Ptr weightBox;
+	tgui::TextBox::Ptr promptBox;
+	tgui::Label::Ptr activity;
+	tgui::Label::Ptr promptInitialSelect;
+	tgui::Button::Ptr exclamation;
 };

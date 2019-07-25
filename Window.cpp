@@ -39,12 +39,13 @@ void Window::ToggleFullscreen(){
 	Create();
 }
 
-void Window::Update(){
+void Window::Update(tgui::Gui &gui){
 	sf::Event event;
 	while(m_window.pollEvent(event)){
 		if(event.type == sf::Event::Closed){ m_isDone = true; }
 		else if(event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape){ m_isDone = true; }
 		else if(event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::F5){ ToggleFullscreen(); }
+		gui.handleEvent(event);
 	}
 }
 

@@ -12,6 +12,7 @@ class Node
     sf::Vector2f getPosition();
 
     void Render(sf::RenderWindow& l_window);
+    void isSelected(bool);
     int nodenumber;
 
   private:

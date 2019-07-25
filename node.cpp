@@ -4,21 +4,39 @@
 Node::Node()
 {
     extern sf::Font font;
-    nodeshape.setRadius(5);
+
+    nodeshape.setRadius(15);
     nodeshape.setOrigin(nodeshape.getRadius(), nodeshape.getRadius());
-    nodeshape.setFillColor(sf::Color::Cyan);
+    nodeshape.setFillColor(sf::Color::Black);
+    nodeshape.setOutlineThickness(2);
+    nodeshape.setOutlineColor(sf::Color::Cyan);
+
     text.setFont(font);
-    text.setFillColor(sf::Color::Cyan);
     text.setCharacterSize(15);
+    text.setFillColor(sf::Color::Cyan);
 }
 
 void Node::Create(float x, float y, int offset)
 {
     nodeshape.setPosition({x, y});
+    text.setPosition({x - 5, y - 9});
     nodenumber = offset;
     char c = static_cast<char>(65 + offset);
     text.setString(c);
-    text.setPosition({x,y-25});
+}
+
+void Node::isSelected(bool value)
+{
+    if (value==false)
+    {
+        nodeshape.setFillColor(sf::Color::Black);
+        text.setFillColor(sf::Color::Cyan);
+    }
+    if (value == true)
+    {
+        nodeshape.setFillColor(sf::Color::Cyan);
+        text.setFillColor(sf::Color::Black);
+    }
 }
 
 sf::Vector2f Node::getPosition()
