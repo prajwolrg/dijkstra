@@ -14,6 +14,10 @@ Node::Node()
     text.setFont(font);
     text.setCharacterSize(15);
     text.setFillColor(sf::Color::Cyan);
+
+    weight.setFont(font);
+    weight.setFillColor(sf::Color::Cyan);
+    weight.setCharacterSize(15);
 }
 
 void Node::Create(float x, float y, int offset)
@@ -23,6 +27,7 @@ void Node::Create(float x, float y, int offset)
     nodenumber = offset;
     char c = static_cast<char>(65 + offset);
     text.setString(c);
+    weight.setPosition({x-5, y-35});
 }
 
 void Node::isSelected(bool value)
@@ -48,4 +53,5 @@ void Node::Render(sf::RenderWindow &l_window)
 {
     l_window.draw(nodeshape);
     l_window.draw(text);
+    l_window.draw(weight);
 }

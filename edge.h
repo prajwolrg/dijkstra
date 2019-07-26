@@ -9,6 +9,7 @@ class Edge
     Edge();
 
     void Create(int, int, sf::Vector2f, sf::Vector2f);
+    void dCreate(sf::Vector2f, sf::Vector2f);
 
     sf::Vector2f getPosition();
 
@@ -20,6 +21,7 @@ class Edge
   private:
     sf::Vector2f head_position;
     sf::Vector2f tail_position;
+
     sf::RectangleShape edgeshape;
     float width;
     float rotation;

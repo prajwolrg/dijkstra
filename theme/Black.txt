@@ -11,6 +11,10 @@ AButton {
     Texture = "i.png";
     TextureHover = "ihover.png"
 }
+ClearButton {
+    Texture = "1.png";
+    TextureHover = "4.png";
+}
 
 ChatBox {
     TextureBackground = "Black.png" Part(0, 154, 48, 48) Middle(16, 16, 16, 16);

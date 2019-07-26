@@ -13,6 +13,7 @@ class Node
 
     void Render(sf::RenderWindow& l_window);
     void isSelected(bool);
+    sf::Text weight;
     int nodenumber;
 
   private:
