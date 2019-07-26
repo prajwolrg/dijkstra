@@ -33,6 +33,33 @@ Game::Game() : m_window("Graph Creator Window", sf::Vector2u(800, 600)), total_n
     gui.setTarget(*m_window.GetRenderWindow());
     theme.load("theme/Black.txt");
 
+    instructions = tgui::TextBox::create();
+    instructions->setRenderer(theme.getRenderer("TextBox"));
+    instructions->setTextSize(14);
+    instructions->setSize({"50%", "40%"});
+    instructions->setPosition({"25%", "25%"});
+    instructions->setReadOnly(true);
+    const std::string instruction =
+        R"(
+                  INSTRUCTIONS
+
+    Right Click to create a new Node.
+    Left Click to select a node.
+    An edge is created when two nodes are selected.
+        
+    Provide the weight of the newly created edge
+    by selecting the box and entering the weight.
+
+    Press 'Enter' to then apply Dijkstra's Shortest
+    Path Finding Algorithm.
+
+    Select any node as initial node to start Dijkstra's 
+    Algorithm
+    )";
+    instructions->setText(instruction);
+    instructions->setVisible(true);
+    gui.add(instructions);
+
     weightBox = tgui::EditBox::create();
     weightBox->setSize({50, 30});
     weightBox->setDefaultText("Enter Weight");
@@ -41,10 +68,11 @@ Game::Game() : m_window("Graph Creator Window", sf::Vector2u(800, 600)), total_n
     gui.add(weightBox);
 
     clearinfo = tgui::TextBox::create();
-    clearinfo->setText("This clears all the edges and the nodes that are displayed on the screen.");
+    clearinfo->setText("This clears the screen for the creation of new graph.");
     clearinfo->setSize({200, 50});
     clearinfo->setRenderer(theme.getRenderer("TextBox"));
 
+    //Clear Button at Left Top of the Window
     clear = tgui::Button::create();
     clear->setToolTip(clearinfo);
     clear->setRenderer(theme.getRenderer("ClearButton"));
@@ -60,6 +88,23 @@ Game::Game() : m_window("Graph Creator Window", sf::Vector2u(800, 600)), total_n
     promptBox->setPosition({m_window.GetWindowSize().x - promptBox->getSize().x, 10});
     gui.add(promptBox);
 
+    log = tgui::ChatBox::create();
+    log->setRenderer(theme.getRenderer("ChatBox"));
+    log->setTextSize(14);
+    log->setSize({"40%", "30%"});
+    log->setPosition("56.5%", "5%");
+    log->setTextColor({200, 200, 200});
+    log->addLine("Graph Creator Initialized.");
+    log->setVisible(false);
+    gui.add(log);
+
+    //Info Button at Right Top of the Window
+    info = tgui::Button::create();
+    info->setRenderer(theme.getRenderer("InfoButton"));
+    info->setSize(25, 25);
+    info->setPosition({m_window.GetWindowSize().x - 35, 10});
+    gui.add(info);
+
     activity = tgui::Label::create();
     activity->setText("Recent Activity: Graph Creator Initialized");
     activity->setPosition({(m_window.GetWindowSize().x - activity->getSize().x) / 2, m_window.GetWindowSize().y - 30});
@@ -72,7 +117,7 @@ Game::Game() : m_window("Graph Creator Window", sf::Vector2u(800, 600)), total_n
 
 void Game::clearAll(bool val)
 {
-    for (int i=0; i<total_nodes; i++)
+    for (int i = 0; i < total_nodes; i++)
     {
         nodes[i].weight.setString(" ");
         nodes[i].isSelected(false);
@@ -123,6 +168,10 @@ void Game::changeActivity(std::string message)
     message = default_string + message;
     activity->setText(message);
 }
+void Game::addLog(std::string message)
+{
+    log->addLine(message);
+}
 
 void Game::HandleMovements()
 {
@@ -138,7 +187,13 @@ void Game::HandleMovements()
             }
         }
         nodes[total_nodes++].Create(x, y, total_nodes - 1);
-        changeActivity("New node created");
+        std::string message = "Node ";
+        message.push_back(64 + total_nodes);
+        message += " is created.";
+        changeActivity(message);
+        addLog(message);
+        log->setVisible(false);
+        instructions->setVisible(false);
     }
 
     if (m_window.Active() && sf::Mouse::isButtonPressed(sf::Mouse::Left) && (!weightBox->isVisible() || promptInitialSelect->isVisible()))
@@ -150,10 +205,17 @@ void Game::HandleMovements()
         {
             return;
         }
+        log->setVisible(false);
+        instructions->setVisible(false);
         if (clear->mouseOnWidget({x, y}))
         {
             changeActivity("Screen has been cleared.");
+            addLog("Screen has been cleared.");
             clearAll(true);
+        }
+        if (info->mouseOnWidget({x, y}))
+        {
+            log->setVisible(true);
         }
         for (int i = 0; i < total_nodes; i++)
         {
@@ -169,14 +231,19 @@ void Game::HandleMovements()
                     changeActivity(message);
                     break;
                 }
-                message += " is selected.";
+                message += " is selected";
                 nodes[i].isSelected(true);
                 changeActivity(message);
                 selected_nodes.push_back(nodes[i]);
                 if (promptInitialSelect->isVisible())
                 {
-                    message = message + " is selected as initial node.";
+                    message = message + " as initial node.";
                     changeActivity(message);
+                    addLog("----------------------------");
+                    std::string a = "Dijkstra's Algorithm Started with ";
+                    a.push_back(c);
+                    a += " as initial node";
+                    addLog(a);
                     nodes[i].isSelected(true);
                     promptInitialSelect->setVisible(false);
                     initial = i;
@@ -207,6 +274,7 @@ void Game::HandleMovements()
         message = message + " and ";
         message.push_back(B.nodenumber + 65);
         changeActivity(message);
+        addLog(message);
 
         edges[total_edges++].Create(A.nodenumber, B.nodenumber, headposition, tailposition);
 
@@ -234,6 +302,8 @@ void Game::HandleMovements()
         {
             return;
         }
+        log->setVisible(false);
+        instructions->setVisible(false);
         if (!weightBox->isVisible())
         {
             dijkstra.terminate();
@@ -315,8 +385,6 @@ void Game::Dijkstra()
         messagenode += " is selected. ";
         changeActivity(messagenode);
 
-        std::cout << "Create an edge between nodes " << p[u].nodepath.back() << " and " << u << endl;
-
         dedges[total_dedges++].dCreate(nodes[u].getPosition(), nodes[p[u].nodepath.back()].getPosition());
 
         sf::sleep(delaytime);
@@ -359,8 +427,14 @@ void Game::Dijkstra()
 
         //Change u to anything but initial and previous u
         available.remove(u);
-        if (available.empty()) { break; }
-        else { u = available.front(); }
+        if (available.empty())
+        {
+            break;
+        }
+        else
+        {
+            u = available.front();
+        }
     }
 
     for (int i = 0; i < total_nodes; i++)
@@ -376,16 +450,43 @@ void Game::Dijkstra()
         char c, j, k;
         j = i + 65;
         k = initial + 65;
-        std::cout << "Initial Node: " << k << "\t Final Node: " << j << " \tWeight: " << p[i].weight << "\tPath: ";
+
+        // std::cout << "Initial Node: " << k << "\t Final Node: " << j << " \tWeight: " << p[i].weight << "\tPath: ";
+
+        std::string log = "";
+        log.push_back(k);
+        log += " -> ";
+        log.push_back(j);
+        log += " = ";
+
+        if (p[i].weight >= abs(numeric_limits<double>::infinity()) / 2)
+        {
+            std::string w = std::to_string(p[i].weight);
+            log += w;
+        }
+        else
+        {
+            int weight = p[i].weight;
+            std::string w = std::to_string(weight);
+            log += w;
+        }
+
+        log += " :: ";
+
         while (!p[i].nodepath.empty())
         {
             c = p[i].nodepath.front() + 65;
-            std::cout << c << "  ";
+            // std::cout << c << "  ";
             p[i].nodepath.pop_front();
+            log.push_back(c);
+            log += " ";
         }
-        std::cout << endl;
+        // std::cout << endl;
+        addLog(log);
     }
     changeActivity("Dijkstra's Algorithm Completed!");
+    addLog("Dijkstra Algorithm Completed!");
+    addLog("---------------------------------");
 }
 
 void Game::Update()
@@ -407,23 +508,23 @@ void Game::CreateMatrix()
         Matrix[b][a] = edges[i].weight;
         M[b][a] = edges[i].weight;
     }
-    for (int i=0; i<total_nodes; i++)
+    for (int i = 0; i < total_nodes; i++)
     {
         nodes[i].weight.setString(" ");
     }
     selected_nodes.clear();
     total_dedges = 0;
 
-    std::cout << endl
-              << "The Matrix form of the given graph is: " << endl;
+    // std::cout << endl
+    //           << "The Matrix form of the given graph is: " << endl;
     for (int i = 0; i < total_nodes; i++)
     {
         nodes[i].isSelected(false);
-        for (int j = 0; j < total_nodes; j++)
-        {
-            std::cout << Matrix[i][j] << "\t";
-        }
-        std::cout << endl;
+        // for (int j = 0; j < total_nodes; j++)
+        // {
+            // std::cout << Matrix[i][j] << "\t";
+        // }
+        // std::cout << endl;
     }
 }
 

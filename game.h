@@ -14,11 +14,12 @@ public:
 	struct Path
 	{
 		std::list<int> nodepath;
-		int weight;
+		double weight;
 		bool fixed;
 	};
 
 	void changeActivity(std::string);
+	void addLog(std::string);
 
 	void HandleMovements();
 	void Update();
@@ -62,7 +63,10 @@ private:
 	tgui::Label::Ptr activity;
 	tgui::Label::Ptr promptInitialSelect;
 	tgui::Button::Ptr clear;
+	tgui::Button::Ptr info;
 	tgui::TextBox::Ptr clearinfo;
+	tgui::ChatBox::Ptr log;
+	tgui::TextBox::Ptr instructions;
 
 	sf::Thread dijkstra;
 };

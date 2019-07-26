@@ -7,7 +7,7 @@ Button {
     TextColorHover  = rgb(250, 250, 250);
 }
 
-AButton {
+InfoButton {
     Texture = "i.png";
     TextureHover = "ihover.png"
 }
@@ -19,7 +19,7 @@ ClearButton {
 ChatBox {
     TextureBackground = "Black.png" Part(0, 154, 48, 48) Middle(16, 16, 16, 16);
     Scrollbar         = &Scrollbar;
-    Padding           = (3, 3, 3, 3);
+    Padding           = (15, 10, 10, 10);
 }
 
 Checkbox {
