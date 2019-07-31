@@ -30,6 +30,7 @@ Game::Game() : m_window("Graph Creator Window", sf::Vector2u(800, 600)), total_n
             }
         }
     }
+
     gui.setTarget(*m_window.GetRenderWindow());
     theme.load("theme/Black.txt");
 
@@ -104,6 +105,13 @@ Game::Game() : m_window("Graph Creator Window", sf::Vector2u(800, 600)), total_n
     info->setSize(25, 25);
     info->setPosition({m_window.GetWindowSize().x - 35, 10});
     gui.add(info);
+
+    apply = tgui::Button::create();
+    apply->setRenderer(theme.getRenderer("Button"));
+    apply->setSize({200,42});
+    apply->setPosition({(m_window.GetWindowSize().x - apply->getSize().x)/2  , m_window.GetWindowSize().y - 100});
+    apply->setText("Apply Dijkstra Algorithm");
+    gui.add(apply);
 
     activity = tgui::Label::create();
     activity->setText("Recent Activity: Graph Creator Initialized");
@@ -217,6 +225,15 @@ void Game::HandleMovements()
         {
             log->setVisible(true);
         }
+
+        if (apply->mouseOnWidget({x,y}))
+        {
+            dijkstra.terminate();
+            changeActivity("WAITING FOR THE USER TO SELECT INITIAL NODE.");
+            CreateMatrix();
+            promptInitialSelect->setVisible(true);
+        }
+
         for (int i = 0; i < total_nodes; i++)
         {
             char c;

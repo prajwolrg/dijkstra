@@ -17,7 +17,7 @@ ClearButton {
 }
 
 ChatBox {
-    TextureBackground = "Black.png" Part(0, 154, 48, 48) Middle(16, 16, 16, 16);
+    TextureBackground         = "Black.png" Part( 0, 64, 45, 50) Middle(10, 0, 25, 50);
     Scrollbar         = &Scrollbar;
     Padding           = (15, 10, 10, 10);
 }

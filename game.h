@@ -64,6 +64,7 @@ private:
 	tgui::Label::Ptr promptInitialSelect;
 	tgui::Button::Ptr clear;
 	tgui::Button::Ptr info;
+	tgui::Button::Ptr apply;
 	tgui::TextBox::Ptr clearinfo;
 	tgui::ChatBox::Ptr log;
 	tgui::TextBox::Ptr instructions;
